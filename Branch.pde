@@ -2,7 +2,6 @@ public class Branch {
   Branch child1;
   Branch child2;
   float angle;
-  float D, prevD;
   PVector curPos;
   float len, wid;
   color clr;
@@ -29,7 +28,6 @@ TODO:
   private Branch(PVector start, float angle, float len, float wid,
                 float drift, float diverge, float divRateMin, float divRateMax) {
     this.angle = angle;
-    this.prevD = 0;
     this.curPos = start;
     this.len = len;
     this.wid = wid;
@@ -58,18 +56,29 @@ TODO:
       if(attractor != null)
       {
         float diffAngle = atan2((attractor.y - curPos.y), (attractor.x - curPos.x));
-        if(diffAngle<0)
-          diffAngle = 2*PI + diffAngle;
-        angle = 0.95*angle+0.05*diffAngle + random(-drift, drift);
-        println("Angle:" + degrees(diffAngle) + "\t" + D);
+//        if(diffAngle<0) diffAngle = 2*PI + diffAngle;
+        //angle = 0.95*angle+0.05*diffAngle + random(-drift, drift);
+        angle = 0.95*angle+0.05*diffAngle;
+
+
+        pushStyle();
+        stroke(255,0,0,255);
+        strokeWeight(0.5);
+        fill(0,0,0,0);
+        line(attractor.x, attractor.y, curPos.x,  curPos.y);
+        float D = dist(attractor.x, attractor.y, curPos.x,  curPos.y);
+        ellipse(attractor.x, attractor.y, D*2, D*2);
+        popStyle();
+        println("Angle:" + degrees(diffAngle) + "\tD: "  + D);
       }
       else
       {
         angle = angle + random(-drift, drift);
       }
-      PVector nextPos = new PVector(curPos.x+len*cos(angle), curPos.y+len*sin(angle));
+      //PVector speed = new PVector(len*cos(angle), len*sin(angle));
+      PVector speed = PVector.sub(attractor, curPos).normalize().mult(len);
+      PVector nextPos = PVector.add(curPos, speed);
       linePV(curPos, nextPos);
-      println(curPos.x + "\t" + curPos.y + "\t\t" + nextPos.x + "\t" + nextPos.y);
       curPos = nextPos;
     }
     else
@@ -101,7 +110,7 @@ TODO:
     }
   }
   
-  
+  // Helper function for drawing lines between vectors
   private void linePV(PVector a, PVector b)
   {
     line(a.x, a.y, b.x, b.y);
