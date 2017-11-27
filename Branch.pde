@@ -1,9 +1,8 @@
 public class Branch {
   Branch child1;
   Branch child2;
-  float angle;
-  PVector curPos;
-  float len, wid;
+  PVector curPos, speed;
+  float wid;
   color clr;
   boolean growing = true;
   float drift;
@@ -25,11 +24,10 @@ TODO:
 - Pause growth
 - 3D
 */
-  private Branch(PVector start, float angle, float len, float wid,
+  private Branch(PVector start, /*float angle, float len,*/ PVector speed, float wid,
                 float drift, float diverge, float divRateMin, float divRateMax) {
-    this.angle = angle;
+    this.speed = speed;
     this.curPos = start;
-    this.len = len;
     this.wid = wid;
     this.growing = true;
     this.drift = drift;
@@ -58,25 +56,30 @@ TODO:
         float diffAngle = atan2((attractor.y - curPos.y), (attractor.x - curPos.x));
 //        if(diffAngle<0) diffAngle = 2*PI + diffAngle;
         //angle = 0.95*angle+0.05*diffAngle + random(-drift, drift);
-        angle = 0.95*angle+0.05*diffAngle;
+        //angle = 0.95*angle+0.05*diffAngle;
 
-
+        float D = dist(attractor.x, attractor.y, curPos.x,  curPos.y);
+        if(false)
+        {
         pushStyle();
         stroke(255,0,0,255);
         strokeWeight(0.5);
         fill(0,0,0,0);
         line(attractor.x, attractor.y, curPos.x,  curPos.y);
-        float D = dist(attractor.x, attractor.y, curPos.x,  curPos.y);
         ellipse(attractor.x, attractor.y, D*2, D*2);
         popStyle();
+        }
         println("Angle:" + degrees(diffAngle) + "\tD: "  + D);
+        speed = PVector.sub(attractor, curPos).normalize().mult(speed.mag());
       }
       else
       {
-        angle = angle + random(-drift, drift);
+        //angle = angle + random(-drift, drift);
+        speed = PVector.fromAngle(speed.heading() + random(-drift, drift)).mult(speed.mag());
+        //speed = PVector.add(speed, randV).normalize().mult(speed.mag());
       }
       //PVector speed = new PVector(len*cos(angle), len*sin(angle));
-      PVector speed = PVector.sub(attractor, curPos).normalize().mult(len);
+      
       PVector nextPos = PVector.add(curPos, speed);
       linePV(curPos, nextPos);
       curPos = nextPos;
@@ -91,6 +94,7 @@ TODO:
     {
       if(growing)
         this.divide();
+      println("split!");
     }
   }
   
@@ -100,8 +104,10 @@ TODO:
     {
       growing = false;
       float oneChildSize = random(0.2, 0.8);
-      child1 = new Branch(curPos, angle+((PI/2)*diverge)+random(-drift, drift), len, wid*oneChildSize, drift, diverge, divRateMin, divRateMax);
-      child2 = new Branch(curPos, angle-((PI/2)*diverge)+random(-drift, drift), len, wid*(1-oneChildSize), drift, diverge, divRateMin, divRateMax);
+      PVector speed1 = PVector.fromAngle(speed.heading()+((PI/2)*diverge)+random(-drift, drift)).mult(speed.mag());
+      PVector speed2 = PVector.fromAngle(speed.heading()-((PI/2)*diverge)+random(-drift, drift)).mult(speed.mag());
+      child1 = new Branch(curPos, /*angle+((PI/2)*diverge)+random(-drift, drift), len,*/ speed1, wid*oneChildSize, drift, diverge, divRateMin, divRateMax);
+      child2 = new Branch(curPos, /*angle-((PI/2)*diverge)+random(-drift, drift), len,*/ speed2, wid*(1-oneChildSize), drift, diverge, divRateMin, divRateMax);
     }
     else
     {

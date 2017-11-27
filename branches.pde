@@ -20,14 +20,16 @@ void setup()
   smooth();
   strokeCap(ROUND);
   strokeJoin(ROUND);
-  ntrees = 1;//int(random(5, 50));
+  ntrees = 10;//int(random(5, 50));
   background(0);
   frameRate(24);
   branches = new ArrayList<Branch>();
   for (int i = 0; i < ntrees; i++) {
-    //Branch(PVector(x, y), angle, len, wid, drift, diverge, divRateMin, divRateMax)
-    ///branches.add( new Branch( new PVector(ox, oy), PI/(i*0.1), random(0.5, 2), random(0.1, 8), 0.2, 0.5, 200, 300 ) );
-    branches.add( new Branch( new PVector(ox, oy), PI/(i*0.1+0.1), random(2, 2), 5, 0.2, 0.5, 2000, 3000 ) );
+    //Branch(position, speed, wid, drift, diverge, divRateMin, divRateMax)
+    PVector position = new PVector(ox, oy);
+    PVector speed = PVector.fromAngle(PI/(i*0.1)).mult(random(0.5, 2));
+    branches.add( new Branch( position, speed, random(0.1, 8), 0.2, 0.5, 100, 300 ) );
+    ///branches.add( new Branch( new PVector(ox, oy), PVector.random2D().normalize().mult(random(2, 2)), 5, 0.2, 0.5, 2000, 3000 ) );
     // Trees:
     //branches.add( new Branch( i*(width/(ntrees)), height, PI*1.5, random(1,3), random(0.1,10), 0.2, 0.5, 20, 100 ) );
     // Video, corner 1:
@@ -38,7 +40,7 @@ void setup()
 
 void draw()
 {
-  background(0);
+  //background(0);
   for (Branch branch : branches) {
     branch.grow(new PVector(mouseX, mouseY));
   }
@@ -46,8 +48,8 @@ void draw()
   pushStyle();
   stroke(0,255,255,100);
   strokeWeight(1);
-  line(0, mouseY, width, mouseY);
-  line(mouseX, 0, mouseX, height);
+  //line(0, mouseY, width, mouseY);
+  //line(mouseX, 0, mouseX, height);
   popStyle();
 }
 
