@@ -20,6 +20,11 @@ drift: How much the branches drift from their initial direction. If drift=0 bran
 diverge: (angle) How much new child branches diverge from each other (this one is affected by drift).
 divRate min, divRateMax: (frames) Boundaries for how fast branches start to divide into children.
 Use the same value for both equal to keep branching time constant.
+
+TODO:
+- Color configuration
+- Pause growth
+- 3D
 */
   private Branch(PVector start, float angle, float len, float wid,
                 float drift, float diverge, float divRateMin, float divRateMax) {
@@ -33,49 +38,44 @@ Use the same value for both equal to keep branching time constant.
     this.diverge = diverge;
     this.divRateMin = divRateMin;
     this.divRateMax = divRateMax;
-    //clri = color(random(255), random(255), random(255), 200);
+    // TODO: color configuration
     this.clr = color(255, 255, 255, 100);
   }
 
-  void grow(PVector dest)
+  // If attractor == null, then the structure growth direction changes randomly.
+  public void grow() {
+    grow(null);
+  }
+  
+  public void grow(PVector attractor)
   {
     stroke(clr);
     strokeWeight(wid);
     fill(clr);
-    //pushStyle();
-    //stroke(255,0,0, 10);
-    //strokeWeight(0.01);
-    //line(curPos.x,curPos.y,dest.x,dest.y);
-    //popStyle();
 
     if(growing)
     {
-      float diffAngle = atan2((dest.y - curPos.y), (dest.x - curPos.x));
-      D = dest.x - curPos.x;
-      pushStyle();
-      strokeWeight(0.1);
-      stroke(255-D/10,0,0,255-D/10);
-      //linePV(dest, curPos);
-      popStyle();
+      if(attractor != null)
+      {
+        float diffAngle = atan2((attractor.y - curPos.y), (attractor.x - curPos.x));
+        if(diffAngle<0)
+          diffAngle = 2*PI + diffAngle;
+        angle = 0.95*angle+0.05*diffAngle + random(-drift, drift);
+        println("Angle:" + degrees(diffAngle) + "\t" + D);
+      }
+      else
+      {
+        angle = angle + random(-drift, drift);
+      }
       PVector nextPos = new PVector(curPos.x+len*cos(angle), curPos.y+len*sin(angle));
-      println(curPos.x + "\t" + curPos.y + "\t\t" + nextPos.x + "\t" + nextPos.y);
-      //PVector nextPos = diff.mult(len);
-      
-//      translate(curPos.x, curPos.y);
-//      line(0, 0, nextPos.x, nextPos.y);
-
-      
       linePV(curPos, nextPos);
-      angle = 0.95*angle+0.05*diffAngle + random(-drift, drift);
-      //angle = diffAngle + 5*random(-drift, drift);
-      println(degrees(diffAngle) + "\t" + D);
+      println(curPos.x + "\t" + curPos.y + "\t\t" + nextPos.x + "\t" + nextPos.y);
       curPos = nextPos;
-      prevD = D;
     }
     else
     {
-      child1.grow(dest);
-      child2.grow(dest);
+      child1.grow(attractor);
+      child2.grow(attractor);
     }
     
     if(frameCount % (floor(random(divRateMin, divRateMax))) == 0)
@@ -85,7 +85,7 @@ Use the same value for both equal to keep branching time constant.
     }
   }
   
-  void divide()
+  private void divide()
   {
     if(growing)
     {
@@ -100,6 +100,7 @@ Use the same value for both equal to keep branching time constant.
       child2.divide();
     }
   }
+  
   
   private void linePV(PVector a, PVector b)
   {

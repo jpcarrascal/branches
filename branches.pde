@@ -6,7 +6,7 @@ ArrayList<Branch> branches;
 void setup()
 {
   //size(1920, 1080);
-  size(800, 800);
+  size(600, 600);
   //fullScreen();
   if (mouseX==0 && mouseY==0)
   {
