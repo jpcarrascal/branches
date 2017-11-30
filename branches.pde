@@ -1,5 +1,6 @@
 int ntrees;
 float ox, oy;
+float gravity;
 
 ArrayList<Branch> branches; 
 
@@ -8,6 +9,7 @@ void setup()
   //size(1920, 1080);
   size(600, 600);
   //fullScreen();
+  gravity = 1000;
   if (mouseX==0 && mouseY==0)
   {
     ox = width/2;
@@ -20,7 +22,7 @@ void setup()
   smooth();
   strokeCap(ROUND);
   strokeJoin(ROUND);
-  ntrees = 10;//int(random(5, 50));
+  ntrees = 20;//int(random(5, 50));
   background(0);
   frameRate(24);
   branches = new ArrayList<Branch>();
@@ -28,8 +30,8 @@ void setup()
     //Branch(position, speed, wid, drift, diverge, divRateMin, divRateMax)
     PVector position = new PVector(ox, oy);
     PVector speed = PVector.fromAngle(PI/(i*0.1)).mult(random(0.5, 2));
-    branches.add( new Branch( position, speed, random(0.1, 8), 0.2, 0.5, 100, 300 ) );
-    ///branches.add( new Branch( new PVector(ox, oy), PVector.random2D().normalize().mult(random(2, 2)), 5, 0.2, 0.5, 2000, 3000 ) );
+    branches.add( new Branch( position, speed, random(0.1, 8), 0.2, 0.5, 80, 300 ) );
+    ///branches.add( new Branch( new PVector(ox, oy), PVector.fromAngle(0).mult(2), 5, 0.2, 0.5, 2000, 3000 ) );
     // Trees:
     //branches.add( new Branch( i*(width/(ntrees)), height, PI*1.5, random(1,3), random(0.1,10), 0.2, 0.5, 20, 100 ) );
     // Video, corner 1:
@@ -42,7 +44,7 @@ void draw()
 {
   //background(0);
   for (Branch branch : branches) {
-    branch.grow(new PVector(mouseX, mouseY));
+    branch.grow(new PVector(mouseX, mouseY), gravity);
   }
   //  saveFrame("anim/tree-####.png");
   pushStyle();
