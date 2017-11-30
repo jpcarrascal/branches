@@ -9,13 +9,13 @@ A configurable Processing class for creating organic branching structures proced
 
    Attributes:
    
-   PVector start: Start position
-   PVector speed: growth speed towards an initial direction
-   wid: Thickness of the initial branch (trunk).
-   drift: How much the branches drift from their initial direction. If drift=0 branches will be straight lines.
-   diverge: (angle) How much new child branches diverge from each other (this one is affected by drift).
-   divRate min, divRateMax: (frames) Boundaries for how fast branches start to divide into children.
-   Use the same value for both equal to keep branching time constant.
+   - PVector start: Start position
+   - PVector speed: growth speed towards an initial direction
+   - wid: Thickness of the initial branch (trunk).
+   - drift: How much the branches drift from their initial direction. If drift=0 branches will be straight lines.
+   - diverge: (angle) How much new child branches diverge from each other (this one is affected by drift).
+   - divRate min, divRateMax: (frames) Boundaries for how fast branches start to divide into children.
+   - Use the same value for both equal to keep branching time constant.
    
    Methods:
    
