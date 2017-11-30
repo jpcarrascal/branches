@@ -53,7 +53,6 @@ PVector start(x,y): Start position
     {
       if (attractor != null)
       {
-        println(attractor.x);
         float D = PVector.dist(curPos, attractor);
         attractor.sub(curPos).normalize().mult(g/(D*D));
         speed = PVector.fromAngle(speed.heading() + random(-drift, drift)).add(attractor).normalize().mult(speed.mag());
@@ -76,7 +75,6 @@ PVector start(x,y): Start position
     {
       if (growing)
         this.divide();
-      println("split!");
     }
   }
 
@@ -88,8 +86,8 @@ PVector start(x,y): Start position
       float oneChildSize = random(0.2, 0.8);
       PVector speed1 = PVector.fromAngle(speed.heading()+((PI/2)*diverge)+random(-drift, drift)).mult(speed.mag());
       PVector speed2 = PVector.fromAngle(speed.heading()-((PI/2)*diverge)+random(-drift, drift)).mult(speed.mag());
-      child1 = new Branch(curPos, /*angle+((PI/2)*diverge)+random(-drift, drift), len,*/ speed1, wid*oneChildSize, drift, diverge, divRateMin, divRateMax);
-      child2 = new Branch(curPos, /*angle-((PI/2)*diverge)+random(-drift, drift), len,*/ speed2, wid*(1-oneChildSize), drift, diverge, divRateMin, divRateMax);
+      child1 = new Branch(curPos, speed1, wid*oneChildSize, drift, diverge, divRateMin, divRateMax);
+      child2 = new Branch(curPos, speed2, wid*(1-oneChildSize), drift, diverge, divRateMin, divRateMax);
     } else
     {
       child1.divide();
