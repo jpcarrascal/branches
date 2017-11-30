@@ -10,19 +10,26 @@ public class Branch {
   float divRateMin;
   float divRateMax;
   /*
-PVector start(x,y): Start position
-   angle: Initial growing angle/direction
-   len: Segment length. The larger the length, the faster the tree will grow.
+   Attributes:
+   
+   PVector start: Start position
+   PVector speed: growth speed towards an initial direction
    wid: Thickness of the initial branch (trunk).
    drift: How much the branches drift from their initial direction. If drift=0 branches will be straight lines.
    diverge: (angle) How much new child branches diverge from each other (this one is affected by drift).
    divRate min, divRateMax: (frames) Boundaries for how fast branches start to divide into children.
    Use the same value for both equal to keep branching time constant.
    
+   Methods:
+   
+   grow():
+   divide():
+   
    TODO:
    - Color configuration
    - Pause growth
    - 3D
+   - Dividing into more than 2 children
    */
   private Branch(PVector start, /*float angle, float len,*/ PVector speed, float wid, 
     float drift, float diverge, float divRateMin, float divRateMax) {
