@@ -22,8 +22,9 @@ public class Branch {
    
    Methods:
    
-   grow():
-   divide():
+   - grow(): grows according to creation parameters
+   - grow(PVector attractor, float gravity): grows towards an attracting point
+   - divide(): splits the branch into two children branches
    
    TODO:
    - Color configuration
